@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AI Analytics</title>
+
+<style>
+
+body{
+    font-family:Segoe UI;
+    background:#f4f6f9;
+    padding:30px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#2c3e50;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>AI Analytics</h1>
+
+<a href="/dashboard">
+    Back to Dashboard
+</a>
+
+<br><br>
+
+<table>
+
+<tr>
+    <th>Category</th>
+    <th>Total Tickets</th>
+</tr>
+
+{% for item in category_stats %}
+
+<tr>
+
+    <td>{{ item[0] }}</td>
+
+    <td>{{ item[1] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

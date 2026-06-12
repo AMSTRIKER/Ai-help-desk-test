@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Technician</title>
+
+    <style>
+
+        body{
+            background:#f4f6f9;
+            font-family:'Segoe UI',sans-serif;
+            padding:30px;
+        }
+
+        .card{
+            max-width:500px;
+            margin:auto;
+            background:white;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 2px 10px rgba(0,0,0,.1);
+        }
+
+        h1{
+            margin-bottom:20px;
+            color:#2c3e50;
+        }
+
+        input,select{
+            width:100%;
+            padding:10px;
+            margin-bottom:15px;
+            border:1px solid #ccc;
+            border-radius:6px;
+        }
+
+        button{
+            background:#3498db;
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:6px;
+            cursor:pointer;
+        }
+
+        a{
+            margin-left:15px;
+            text-decoration:none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>Edit Technician</h1>
+
+<form method="POST">
+
+    <input
+        type="text"
+        name="name"
+        value="{{ technician[1] }}"
+        required
+    >
+    <input
+        type="email"
+        name="email"
+        value="{{ technician[2] }}"
+        required
+    >
+    <input type="text"
+        name="username"
+        value="{{ technician[3] }}"
+        required>
+
+    <input type="text"
+        name="password"
+        value="{{ technician[4] }}"
+        required>
+
+    <select name="specialization">
+
+        <option value="Network"
+        {% if technician[3]=='Network' %}selected{% endif %}>
+        Network
+        </option>
+
+        <option value="Authentication"
+        {% if technician[3]=='Authentication' %}selected{% endif %}>
+        Authentication
+        </option>
+
+        <option value="Performance"
+        {% if technician[3]=='Performance' %}selected{% endif %}>
+        Performance
+        </option>
+
+        <option value="General"
+        {% if technician[3]=='General' %}selected{% endif %}>
+        General
+        </option>
+
+    </select>
+
+    <button type="submit">
+        Save Changes
+    </button>
+
+    <a href="/technicians">
+        Cancel
+    </a>
+
+</form>
+
+</div>
+
+</body>
+</html>

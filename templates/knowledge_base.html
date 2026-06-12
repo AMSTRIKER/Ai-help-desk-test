@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Knowledge Base</title>
+
+    <style>
+
+        body{
+            font-family:Segoe UI;
+            background:#f4f6f9;
+            padding:30px;
+        }
+
+        h1{
+            color:#2c3e50;
+        }
+
+        .article{
+            background:white;
+            padding:20px;
+            margin-top:15px;
+            border-radius:10px;
+            box-shadow:0 2px 5px rgba(0,0,0,.1);
+        }
+
+    </style>
+
+</head>
+<body>
+
+<h1>Knowledge Base</h1>
+
+<a href="/dashboard">
+    Back to Dashboard
+</a>
+
+{% for article in articles %}
+
+<div class="article">
+
+    <h2>{{ article[1] }}</h2>
+
+    <p>{{ article[2] }}</p>
+
+</div>
+
+{% endfor %}
+
+</body>
+</html>

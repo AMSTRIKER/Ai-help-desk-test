@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Helpdesk - Technicians</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            padding:25px;
+        }
+
+        h1{
+            color:#2c3e50;
+            margin-bottom:20px;
+        }
+
+        .top-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:20px;
+        }
+
+        .btn{
+            background:#3498db;
+            color:white;
+            padding:10px 16px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            text-decoration:none;
+        }
+
+        .form-card{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            margin-bottom:20px;
+            box-shadow:0 2px 10px rgba(0,0,0,.08);
+        }
+
+        .form-card input,
+        .form-card select{
+            width:100%;
+            padding:10px;
+            margin-bottom:10px;
+            border:1px solid #ccc;
+            border-radius:6px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            background:white;
+            box-shadow:0 2px 10px rgba(0,0,0,.08);
+        }
+
+        th{
+            background:#2c3e50;
+            color:white;
+            padding:12px;
+        }
+
+        td{
+            padding:10px;
+            border-bottom:1px solid #eee;
+            text-align:center;
+        }
+
+        tr:hover{
+            background:#fafafa;
+        }
+
+        .action-btn{
+            padding:6px 10px;
+            color:white;
+            border-radius:5px;
+            text-decoration:none;
+            margin:2px;
+            display:inline-block;
+        }
+
+        .view{background:#3498db;}
+        .edit{background:#f39c12;}
+        .delete{background:#e74c3c;}
+    </style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <h1>👨‍💻 Technician Management</h1>
+
+    <a href="/dashboard" class="btn">
+        ← Dashboard
+    </a>
+</div>
+
+<div class="form-card">
+
+    <h2 style="margin-bottom:15px;">Add New Technician</h2>
+
+    <form action="/add-technician" method="POST">
+
+    <input
+        type="text"
+        name="name"
+        placeholder="Full Name"
+        required
+    >
+
+    <input
+        type="email"
+        name="email"
+        placeholder="Email Address"
+        required
+    >
+
+    <input
+        type="text"
+        name="username"
+        placeholder="Login Username"
+        required
+    >
+
+    <input
+        type="password"
+        name="password"
+        placeholder="Temporary Password"
+        required
+    >
+
+    <select name="specialization" required>
+        <option value="">Select Specialization</option>
+        <option value="Network">Network</option>
+        <option value="Hardware">Hardware</option>
+        <option value="Software">Software</option>
+        <option value="Authentication">Authentication</option>
+        <option value="Performance">Performance</option>
+        <option value="Email">Email</option>
+    </select>
+
+    <button type="submit">
+        Add Technician
+    </button>
+
+</form>
+
+</div>
+
+<table>
+
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Username</th>
+    <th>Password</th>
+    <th>Specialization</th>
+    <th>Assigned Tickets</th>
+    <th>Actions</th>
+</tr>
+
+{% for tech in technicians %}
+
+<tr>
+
+    <td>{{ tech[0] }}</td>
+    <td>{{ tech[1] }}</td>
+    <td>{{ tech[2] }}</td>
+    <td>{{ tech[3] }}</td>
+    <td>{{ tech[4] }}</td>
+    <td>{{ tech[5] }}</td>
+    <td>{{ tech[6] }}</td>
+
+    <td>
+
+        <a
+        class="action-btn view"
+        href="/technician-tickets/{{ tech[0] }}">
+        View Tickets
+        </a>
+
+        <a
+        class="action-btn edit"
+        href="/edit-technician/{{ tech[0] }}">
+        Edit
+        </a>
+
+        <a
+        class="action-btn delete"
+        href="/delete-technician/{{ tech[0] }}"
+        onclick="return confirm('Delete this technician?')">
+        Delete
+        </a>
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>

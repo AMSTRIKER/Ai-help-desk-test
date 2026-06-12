@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Login</title>
+
+<style>
+
+body{
+    background:#f4f6f9;
+    font-family:Arial;
+}
+
+.container{
+
+    width:400px;
+    margin:100px auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+input{
+
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+}
+/* Role Selection */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #d6dce5;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 15px;
+    color: #34495e;
+    outline: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.form-group select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-group select:hover {
+    border-color: #2563eb;
+}
+
+button{
+
+    width:100%;
+    padding:10px;
+    margin-top:15px;
+    background:#2563eb;
+    color:white;
+    border:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Login</h2>
+
+<form method="POST">
+
+<input
+type="text"
+name="username"
+placeholder="Username"
+required>
+
+<input
+type="password"
+name="password"
+placeholder="Password"
+required><br>
+<br>
+<div class="form-group">
+    <label for="role">Select Role</label>
+    <select name="role" id="role" required>
+        <option value="" disabled selected>Select your role</option>
+        <option value="user">👤 User</option>
+        <option value="technician">🛠 Technician</option>
+        <option value="admin">🛡 Administrator</option>
+    </select>
+</div>
+
+<button type="submit">
+Login
+</button>
+
+</form>
+
+<br>
+
+<a href="/">Home</a>
+<a href="/register">Register</a>
+
+</div>
+
+</body>
+</html>

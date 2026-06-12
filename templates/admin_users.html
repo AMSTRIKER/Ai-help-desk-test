@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>User Management</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f6f9;
+    margin:0;
+}
+
+.header{
+    background:#2c3e50;
+    color:white;
+    padding:15px;
+}
+
+.container{
+    padding:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th{
+    background:#34495e;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+    background:#f8f8f8;
+}
+
+.btn{
+    padding:8px 15px;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.home{
+    background:#3498db;
+    color:white;
+}
+
+.logout{
+    background:#e74c3c;
+    color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>User Management</h2>
+
+<a href="/dashboard">
+    <button class="btn home">
+        Dashboard
+    </button>
+</a>
+
+<a href="/logout">
+    <button class="btn logout">
+        Logout
+    </button>
+</a>
+
+</div>
+
+<div class="container">
+
+<table>
+
+<tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Role</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+    <td>{{ user[0] }}</td>
+    <td>{{ user[1] }}</td>
+    <td>{{ user[2] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

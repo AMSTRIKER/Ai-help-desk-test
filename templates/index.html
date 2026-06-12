@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Helpdesk System</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            margin:0;
+            background:#f4f6f9;
+        }
+
+        nav{
+            background:#1f2937;
+            padding:15px;
+        }
+
+        nav a{
+            color:white;
+            text-decoration:none;
+            margin-right:20px;
+        }
+
+        .hero{
+            text-align:center;
+            padding:80px;
+        }
+
+        .btn{
+            padding:12px 20px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        .primary{
+            background:#2563eb;
+            color:white;
+        }
+
+        .success{
+            background:#10b981;
+            color:white;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav>
+
+<a href="/">Home</a>
+
+{% if username %}
+
+    <a href="/chat-ui">AI Chat</a>
+    <a href="/my-tickets">My Tickets</a>
+
+    {% if role == "admin" %}
+    <a href="/dashboard">Dashboard</a>
+    {% endif %}
+
+    <a href="/logout">Logout</a>
+
+{% else %}
+
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+    <a href="/chat-ui">AI Chat</a>
+
+{% endif %}
+
+</nav>
+
+<div class="hero">
+
+<h1>AI Helpdesk System</h1>
+
+<p>
+Create tickets, track issues, chat with AI,
+and manage support requests.
+</p>
+
+{% if not username %}
+
+<a href="/login">
+<button class="btn primary">
+Login
+</button>
+</a>
+
+
+<a href="/register">
+<button class="btn success">
+Register
+</button>
+</a>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
