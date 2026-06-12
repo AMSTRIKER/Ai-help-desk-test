@@ -32,6 +32,44 @@
             border:1px solid #ccc;
             border-radius:6px;
         }
+        .info-box{
+                background:#eaf4ff;
+                border-left:5px solid #3498db;
+                padding:12px;
+                margin-bottom:20px;
+                border-radius:6px;
+                color:#2c3e50;
+                font-size:14px;
+            }
+
+            label{
+                display:block;
+                margin-top:12px;
+                margin-bottom:5px;
+                font-weight:bold;
+            }
+
+            input, select{
+                width:100%;
+                padding:10px;
+                border:1px solid #ccc;
+                border-radius:6px;
+                margin-bottom:10px;
+            }
+
+            .save-btn{
+                background:#2ecc71;
+                color:white;
+                padding:10px 18px;
+                border:none;
+                border-radius:6px;
+                cursor:pointer;
+                font-weight:bold;
+            }
+
+            .save-btn:hover{
+                opacity:0.9;
+            }
 
         button{
             background:#3498db;
@@ -56,56 +94,65 @@
 <div class="card">
 
 <h1>Edit Technician</h1>
+<div class="info-box">
+    <strong>Technician Login Account</strong><br>
+    If this technician was created before the login system was added,
+    please assign a <b>Username</b> and <b>Password</b> below.
+    These credentials will be used to log in to the Technician Dashboard.
+</div>
 
 <form method="POST">
 
-    <input
-        type="text"
-        name="name"
-        value="{{ technician[1] }}"
-        required
-    >
-    <input
-        type="email"
-        name="email"
-        value="{{ technician[2] }}"
-        required
-    >
+    <label>Full Name</label>
     <input type="text"
-        name="username"
-        value="{{ technician[3] }}"
-        required>
+           name="name"
+           value="{{ technician[1] }}"
+           required>
 
+    <label>Email</label>
+    <input type="email"
+           name="email"
+           value="{{ technician[2] }}"
+           required>
+
+    <label>Username (Technician Login)</label>
     <input type="text"
-        name="password"
-        value="{{ technician[4] }}"
-        required>
+           name="username"
+           value="{{ technician[4] or '' }}"
+           placeholder="Enter login username"
+           required>
 
-    <select name="specialization">
+    <label>Password (Technician Login)</label>
+    <input type="text"
+           name="password"
+           value="{{ technician[5] or '' }}"
+           placeholder="Enter temporary password"
+           required>
 
+    <label>Specialization</label>
+    <select name="specialization" required>
         <option value="Network"
-        {% if technician[3]=='Network' %}selected{% endif %}>
-        Network
+            {% if technician[3] == "Network" %}selected{% endif %}>
+            Network
         </option>
 
         <option value="Authentication"
-        {% if technician[3]=='Authentication' %}selected{% endif %}>
-        Authentication
+            {% if technician[3] == "Authentication" %}selected{% endif %}>
+            Authentication
         </option>
 
         <option value="Performance"
-        {% if technician[3]=='Performance' %}selected{% endif %}>
-        Performance
+            {% if technician[3] == "Performance" %}selected{% endif %}>
+            Performance
         </option>
 
         <option value="General"
-        {% if technician[3]=='General' %}selected{% endif %}>
-        General
+            {% if technician[3] == "General" %}selected{% endif %}>
+            General
         </option>
-
     </select>
 
-    <button type="submit">
+    <button type="submit" class="btn save-btn">
         Save Changes
     </button>
 

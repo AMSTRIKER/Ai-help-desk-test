@@ -93,58 +93,62 @@ def init_db():
     conn.close()
 
 init_db()
-# ---------- Login Route ----------
 # ---------- LOGIN ----------
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        username = request.form["username"].strip()
-        password = request.form["password"].strip()
+        username = request.form["username"]
+        password = request.form["password"]
         selected_role = request.form["role"]
 
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
         cursor.execute("""
-            SELECT
-                id,
-                username,
-                role
+            SELECT id, username, role
             FROM users
-            WHERE username = ?
-            AND password = ?
-            AND role = ?
+            WHERE username=? AND password=? AND role=?
         """, (username, password, selected_role))
 
         user = cursor.fetchone()
 
-        conn.close()
-
         if user:
 
-            # Save login session
             session["user_id"] = user[0]
             session["username"] = user[1]
             session["role"] = user[2]
 
-            # Redirect according to role
+            # Technician login
+            if user[2] == "technician":
+
+                cursor.execute("""
+                    SELECT id, name
+                    FROM technicians
+                    WHERE username=?
+                """, (username,))
+
+                technician = cursor.fetchone()
+
+                if technician:
+                    session["technician_id"] = technician[0]
+                    session["technician_name"] = technician[1]
+
+            conn.close()
+
             if user[2] == "admin":
                 return redirect("/dashboard")
-
             elif user[2] == "technician":
                 return redirect("/technician-dashboard")
-
-            elif user[2] == "user":
+            else:
                 return redirect("/user-dashboard")
 
-            else:
-                return redirect("/")
+        conn.close()
 
         return render_template(
             "login.html",
-            error="Invalid username, password, or selected role."
+            error="Invalid username, password, or role."
         )
 
     return render_template("login.html")
@@ -259,6 +263,10 @@ def technician_dashboard():
 
     if session.get("role") != "technician":
         return "Access Denied"
+    
+    print("Role:", session.get("role"))
+    print("Technician ID:", session.get("technician_id"))
+    print("Technician Name:", session.get("technician_name"))
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -1205,8 +1213,7 @@ def update_ticket(ticket_id, status):
     return redirect("/dashboard")
 # =====================================================
 # TECHNICIAN MANAGEMENT
-# =====================================================
-# ---------- Technician List ----------
+
 @app.route("/technicians")
 def technicians():
 
@@ -1217,22 +1224,26 @@ def technicians():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT
-            tech.id,
-            tech.name,
-            tech.email,
-            tech.specialization,
-            COUNT(t.id) AS total_assigned
-        FROM technicians tech
-        LEFT JOIN tickets t
+    SELECT
+        tech.id,
+        tech.name,
+        tech.email,
+        tech.username,
+        tech.password,
+        tech.specialization,
+        COUNT(t.id) AS assigned_count
+    FROM technicians AS tech
+    LEFT JOIN tickets AS t
         ON tech.id = t.assigned_to
-        GROUP BY
-            tech.id,
-            tech.name,
-            tech.email,
-            tech.specialization
-        ORDER BY tech.name
-    """)
+    GROUP BY
+        tech.id,
+        tech.name,
+        tech.email,
+        tech.username,
+        tech.password,
+        tech.specialization
+    ORDER BY tech.id DESC
+""")
 
     technicians = cursor.fetchall()
 
@@ -1243,7 +1254,6 @@ def technicians():
         technicians=technicians
     )
 
-# ---------- Add Technician ----------
 # ---------- ADD TECHNICIAN ----------
 @app.route("/add-technician", methods=["POST"])
 def add_technician():
@@ -1259,34 +1269,47 @@ def add_technician():
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+    # technicians table
+    cursor.execute("""
+    INSERT INTO technicians
+    (name, email, specialization, username, password)
+    VALUES (?, ?, ?, ?, ?)
+    """, (
+        name,
+        email,
+        specialization,
+        username,
+        password
+    ))
+
+    # users table
+    cursor.execute("""
+    INSERT INTO users
+    (username, password, role)
+    VALUES (?, ?, ?)
+    """, (
+        username,
+        password,
+        "technician"
+    ))
 
     # Save technician details
     cursor.execute("""
         INSERT INTO technicians
-        (
-            name,
-            email,
-            username,
-            password,
-            specialization
-        )
+        (name, email, specialization, username, password)
         VALUES (?, ?, ?, ?, ?)
     """, (
         name,
         email,
+        specialization,
         username,
-        password,
-        specialization
+        password
     ))
 
     # Create login account automatically
     cursor.execute("""
         INSERT INTO users
-        (
-            username,
-            password,
-            role
-        )
+        (username, password, role)
         VALUES (?, ?, ?)
     """, (
         username,
@@ -1299,9 +1322,9 @@ def add_technician():
 
     return redirect("/technicians")
 
-# ---------- Edit Technician ----------
-@app.route("/edit-technician/<int:tech_id>", methods=["GET", "POST"])
-def edit_technician(tech_id):
+# ---------- EDIT TECHNICIAN ----------
+@app.route("/edit-technician/<int:id>", methods=["GET", "POST"])
+def edit_technician(id):
 
     if session.get("role") != "admin":
         return "Access Denied"
@@ -1311,21 +1334,46 @@ def edit_technician(tech_id):
 
     if request.method == "POST":
 
-        name = request.form.get("name")
-        email = request.form.get("email")
+        name = request.form["name"]
+        email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
-        specialization = request.form.get("specialization")
+        specialization = request.form["specialization"]
 
+        # technicians table
         cursor.execute("""
-        UPDATE technicians
-        SET
-            name=?,
-            email=?,
-            username=?,
-            password=?,
-            specialization=?
-        WHERE id=?
+        INSERT INTO technicians
+        (name, email, specialization, username, password)
+        VALUES (?, ?, ?, ?, ?)
+        """, (
+            name,
+            email,
+            specialization,
+            username,
+            password
+        ))
+
+        # users table
+        cursor.execute("""
+        INSERT INTO users
+        (username, password, role)
+        VALUES (?, ?, ?)
+        """, (
+            username,
+            password,
+            "technician"
+        ))
+
+        # Update technicians table
+        cursor.execute("""
+            UPDATE technicians
+            SET
+                name = ?,
+                email = ?,
+                username = ?,
+                password = ?,
+                specialization = ?
+            WHERE id = ?
         """, (
             name,
             email,
@@ -1335,17 +1383,18 @@ def edit_technician(tech_id):
             id
         ))
 
+        # Update corresponding login account
         cursor.execute("""
-        UPDATE users
-        SET
-            username=?,
-            password=?
-        WHERE role='technician'
-        AND username=(
-            SELECT username
-            FROM technicians
-            WHERE id=?
-        )
+            UPDATE users
+            SET
+                username = ?,
+                password = ?
+            WHERE role = 'technician'
+            AND username = (
+                SELECT username
+                FROM technicians
+                WHERE id = ?
+            )
         """, (
             username,
             password,
@@ -1357,15 +1406,10 @@ def edit_technician(tech_id):
 
         return redirect("/technicians")
 
-    cursor.execute("""
-        SELECT
-            id,
-            name,
-            email,
-            specialization
-        FROM technicians
-        WHERE id=?
-    """, (tech_id,))
+    cursor.execute(
+        "SELECT * FROM technicians WHERE id=?",
+        (id,)
+    )
 
     technician = cursor.fetchone()
 

@@ -109,42 +109,17 @@
 
     <form action="/add-technician" method="POST">
 
-    <input
-        type="text"
-        name="name"
-        placeholder="Full Name"
-        required
-    >
-
-    <input
-        type="email"
-        name="email"
-        placeholder="Email Address"
-        required
-    >
-
-    <input
-        type="text"
-        name="username"
-        placeholder="Login Username"
-        required
-    >
-
-    <input
-        type="password"
-        name="password"
-        placeholder="Temporary Password"
-        required
-    >
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="text" name="username" placeholder="Login Username" required>
+    <input type="text" name="password" placeholder="Temporary Password" required>
 
     <select name="specialization" required>
-        <option value="">Select Specialization</option>
-        <option value="Network">Network</option>
-        <option value="Hardware">Hardware</option>
-        <option value="Software">Software</option>
-        <option value="Authentication">Authentication</option>
-        <option value="Performance">Performance</option>
-        <option value="Email">Email</option>
+    <option value="">Select Specialization</option>
+    <option value="Network">Network</option>
+    <option value="Authentication">Authentication</option>
+    <option value="Performance">Performance</option>
+    <option value="General">General</option>
     </select>
 
     <button type="submit">
@@ -168,44 +143,38 @@
     <th>Actions</th>
 </tr>
 
-{% for tech in technicians %}
+<tbody>
+
+{% for technician in technicians %}
 
 <tr>
-
-    <td>{{ tech[0] }}</td>
-    <td>{{ tech[1] }}</td>
-    <td>{{ tech[2] }}</td>
-    <td>{{ tech[3] }}</td>
-    <td>{{ tech[4] }}</td>
-    <td>{{ tech[5] }}</td>
-    <td>{{ tech[6] }}</td>
+    <td>{{ technician[0] }}</td>
+    <td>{{ technician[1] }}</td>
+    <td>{{ technician[2] }}</td>
+    <td>{{ technician[3] }}</td>
+    <td>{{ technician[4] or "" }}</td>
+    <td>{{ technician[5] or "" }}</td>
+    <td>{{ technician[6] }}</td>
 
     <td>
-
-        <a
-        class="action-btn view"
-        href="/technician-tickets/{{ tech[0] }}">
-        View Tickets
+        <a href="/technician-tickets/{{ technician[0] }}">
+            <button class="btn view-btn">View Tickets</button>
         </a>
 
-        <a
-        class="action-btn edit"
-        href="/edit-technician/{{ tech[0] }}">
-        Edit
+        <a href="/edit-technician/{{ technician[0] }}">
+            <button class="btn edit-btn">Edit</button>
         </a>
 
-        <a
-        class="action-btn delete"
-        href="/delete-technician/{{ tech[0] }}"
-        onclick="return confirm('Delete this technician?')">
-        Delete
+        <a href="/delete-technician/{{ technician[0] }}"
+           onclick="return confirm('Delete this technician?')">
+            <button class="btn delete-btn">Delete</button>
         </a>
-
     </td>
-
 </tr>
 
 {% endfor %}
+
+</tbody>
 
 </table>
 
